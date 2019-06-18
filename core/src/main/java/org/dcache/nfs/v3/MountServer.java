@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 - 2015 Deutsches Elektronen-Synchroton,
+ * Copyright (c) 2009 - 2019 Deutsches Elektronen-Synchroton,
  * Member of the Helmholtz Association, (DESY), HAMBURG, GERMANY
  *
  * This library is free software; you can redistribute it and/or modify
@@ -38,6 +38,8 @@ import org.dcache.nfs.v3.xdr.groupnode;
 import org.dcache.nfs.v3.xdr.mountres3_ok;
 import org.dcache.nfs.v3.xdr.mountstat3;
 import java.net.InetAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -83,8 +85,9 @@ public class MountServer extends mount_protServerStub {
 
         mountres3 m = new mountres3();
 
-        java.io.File f = new java.io.File(arg1.value);
-        String mountPoint = f.getPath().replace("\\", "/");
+        Path p = Paths.get(arg1.value);
+        String mountPoint = p.toString().replace("\\", "/");
+
         InetAddress remoteAddress = call$.getTransport().getRemoteSocketAddress().getAddress();
         _log.debug("Mount request for: {}", mountPoint);
 
@@ -174,7 +177,7 @@ public class MountServer extends mount_protServerStub {
         eList.value = null;
 
         Map<String, List<FsExport>> exports = _exportFile
-                .getExports()
+                .exports()
                 .collect(Collectors.groupingBy(FsExport::getPath));
 
         for (String path : exports.keySet()) {

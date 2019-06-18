@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2009 - 2018 Deutsches Elektronen-Synchroton,
+ * Copyright (c) 2009 - 2019 Deutsches Elektronen-Synchroton,
  * Member of the Helmholtz Association, (DESY), HAMBURG, GERMANY
  *
  * This library is free software; you can redistribute it and/or modify
@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.stream.Stream;
 import org.dcache.nfs.v4.xdr.layouttype4;
 
 import org.junit.Before;
@@ -41,7 +42,7 @@ public class FsExportTest {
 
     @Test
     public void testIsEmpty() {
-        assertTrue("Export file should not produce empty export list", _exportFile.getExports().count() > 0);
+        assertTrue("Export file should not produce empty export list", _exportFile.exports().count() > 0);
     }
 
     @Test
@@ -220,7 +221,7 @@ public class FsExportTest {
             "10.0.0.1", "10.0.0.0/24", "10.0.0.0/16", "10.0.0.0/8"
         };
 
-        String[] unsortedEntries = exportFile.exportsFor(InetAddress.getByName("10.0.0.1"))
+        String[] unsortedEntries = exportFile.exports(InetAddress.getByName("10.0.0.1"))
                 .map(FsExport::client)
                 .toArray(String[]::new);
 
@@ -258,6 +259,19 @@ public class FsExportTest {
         FsExport export = _exportFile.getExport("/layouttypes", InetAddress.getByName("172.16.4.1"));
 
         assertTrue("No layout types expected", export.getLayoutTypes().isEmpty());
+    }
+
+    @Test
+    public void testMultipleMatchOrder() throws IOException {
+
+        Stream<FsExport> exports = _exportFile.exports(InetAddress.getByName("192.168.17.1"));
+
+        FsExport.IO iomode = exports.findFirst().orElseThrow(AssertionError::new).ioMode();
+        assertEquals(FsExport.IO.RW, iomode);
+
+        exports = _exportFile.exports(InetAddress.getByName("192.168.17.2"));
+        iomode = exports.findFirst().orElseThrow(AssertionError::new).ioMode();
+        assertEquals(FsExport.IO.RO, iomode);
     }
 
 }

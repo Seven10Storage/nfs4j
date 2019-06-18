@@ -10,6 +10,11 @@ Building from sources
 
 To build nfs4j from source code Java8 and Maven3 are required.
 
+To run benchmarks:
+```
+mvn verify -Pbenchmark
+```
+
 Implementing own NFS server
 ---------------------------
 
@@ -63,7 +68,7 @@ Use NFS4J in your project
 <dependency>
     <groupId>org.dcache</groupId>
     <artifactId>nfs4j-core</artifactId>
-    <version>0.17.2</version>
+    <version>0.18.0</version>
 </dependency>
 
 <repositories>
