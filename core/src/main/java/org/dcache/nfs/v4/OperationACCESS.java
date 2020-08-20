@@ -60,6 +60,7 @@ public class OperationACCESS extends AbstractNFSv4Operation {
         if ((requestedAccess & ~validationMask) != 0) {
             throw new InvalException("invalid access mask");
         }
+        int realAccess = context.getFs().access(context.currentInode(), requestedAccess, context.getSubject());
 
         final int realAccess = context.getFs().access(context.currentInode(), requestedAccess);
 

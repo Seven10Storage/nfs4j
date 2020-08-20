@@ -19,6 +19,14 @@
  */
 package org.dcache.nfs.v3;
 
+import static org.dcache.nfs.v3.HimeraNfsUtils.defaultPostOpAttr;
+import static org.dcache.nfs.v3.HimeraNfsUtils.defaultWccData;
+import static org.dcache.nfs.v3.NameUtils.checkFilename;
+
+import java.util.Iterator;
+
+import javax.security.auth.Subject;
+
 import org.dcache.auth.Subjects;
 import org.dcache.nfs.ExportTable;
 import org.dcache.nfs.nfsstat;
@@ -133,24 +141,17 @@ import org.dcache.nfs.v3.xdr.MKNOD3resfail;
 import org.dcache.nfs.v3.xdr.READLINK3resfail;
 import org.dcache.nfs.v3.xdr.RENAME3resfail;
 import org.dcache.nfs.vfs.DirectoryEntry;
-import org.dcache.nfs.vfs.VirtualFileSystem;
+import org.dcache.nfs.vfs.DirectoryStream;
+import org.dcache.nfs.vfs.FsStat;
+import org.dcache.nfs.vfs.Inode;
+import org.dcache.nfs.vfs.PseudoFs;
 import org.dcache.nfs.vfs.Stat;
 import org.dcache.nfs.status.*;
 import org.dcache.oncrpc4j.util.Bytes;
 import org.dcache.oncrpc4j.rpc.RpcCall;
+import org.dcache.oncrpc4j.util.Bytes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.dcache.nfs.v3.HimeraNfsUtils.defaultPostOpAttr;
-import static org.dcache.nfs.v3.HimeraNfsUtils.defaultWccData;
-import static org.dcache.nfs.v3.NameUtils.checkFilename;
-
-import org.dcache.nfs.vfs.FsStat;
-import org.dcache.nfs.vfs.Inode;
-import org.dcache.nfs.vfs.PseudoFs;
-import org.dcache.nfs.vfs.DirectoryStream;
-
-import javax.security.auth.Subject;
 
 public class NfsServerV3 extends nfs3_protServerStub {
 
@@ -199,7 +200,7 @@ public class NfsServerV3 extends nfs3_protServerStub {
 
             HimeraNfsUtils.fill_attributes(objStat, res.resok.obj_attributes.attributes);
 
-            int realAccess = fs.access(inode,  arg1.access.value);
+            int realAccess = fs.access(inode,  arg1.access.value, call$.getCredential().getSubject());
 
             res.resok.access = new uint32(realAccess);
         } catch (ChimeraNFSException hne) {
