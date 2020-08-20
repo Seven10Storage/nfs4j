@@ -24,3 +24,5 @@ spring/.project
 benchmarks/.classpath
 
 *.prefs
+
+.project
