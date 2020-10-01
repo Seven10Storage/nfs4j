@@ -489,6 +489,11 @@ public class DummyVFS implements VirtualFileSystem {
         return mode;
     }
 
+	@Override
+	public int access(Inode inode, int mode, Subject subject) throws IOException {
+		return mode;
+	}
+
     @Override
     public Stat getattr(Inode inode) throws IOException {
         long inodeNumber = toInodeNumber(inode);
