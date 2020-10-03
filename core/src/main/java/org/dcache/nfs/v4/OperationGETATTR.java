@@ -128,7 +128,7 @@ public class OperationGETATTR extends AbstractNFSv4Operation {
 
     }
 
-    static fattr4 getAttributes(bitmap4 bitmap, VirtualFileSystem fs, Inode inode, Stat stat, CompoundContext context)
+    static public fattr4 getAttributes(bitmap4 bitmap, VirtualFileSystem fs, Inode inode, Stat stat, CompoundContext context)
             throws IOException, OncRpcException {
 
         /*

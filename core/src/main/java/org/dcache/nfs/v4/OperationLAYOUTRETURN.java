@@ -35,7 +35,7 @@ public class OperationLAYOUTRETURN extends AbstractNFSv4Operation {
 
         private static final Logger _log = LoggerFactory.getLogger(OperationLAYOUTRETURN.class);
 
-	OperationLAYOUTRETURN(nfs_argop4 args) {
+	public OperationLAYOUTRETURN(nfs_argop4 args) {
 		super(args, nfs_opnum4.OP_LAYOUTRETURN);
 	}
 

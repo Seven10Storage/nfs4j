@@ -72,7 +72,7 @@ public class OperationREADDIR extends AbstractNFSv4Operation {
      */
     private static final long COOKIE_OFFSET = 3;
 
-    OperationREADDIR(nfs_argop4 args) {
+    public OperationREADDIR(nfs_argop4 args) {
         super(args, nfs_opnum4.OP_READDIR);
     }
 
